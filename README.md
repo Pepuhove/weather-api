@@ -58,13 +58,21 @@ Enter a city name: London
 Weather data retrieved successfully:
 
 {
+
   "coord": {...},
+  
   "weather": [...],
+  
   "main": {
+  
     "temp": 285.3,
+    
     ...
+    
   },
+  
   ...
+  
 }
 
 
