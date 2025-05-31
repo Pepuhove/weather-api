@@ -2,10 +2,11 @@ import os
 import requests
 import time
 import json
+from datetime import datetime, timedelta
 from dotenv import load_dotenv
 
 def is_valid_city_name(city):
-    return city.replace(" ", "").isalpha()  # allows multi-word city names
+    return city.replace(" ", "").isalpha()
 
 def get_weather(city):
     load_dotenv()
@@ -21,10 +22,20 @@ def get_weather(city):
         response = requests.get(url)
         if response.status_code == 200:
             print("\nFetching data from OpenWeatherAPI...\n")
-            time.sleep(3)
-            print(f"\nWeather data retrieved successfully for the city of {city_name}:\n")
+            time.sleep(2)
             weather_data = response.json()
+
+            # Extract timezone offset from the API response (in seconds)
+            timezone_offset = weather_data.get("timezone", 0)
+            # Get current UTC time
+            utc_time = datetime.utcnow()
+            # Add offset to UTC to get local time
+            local_time = utc_time + timedelta(seconds=timezone_offset)
+
+            print(f"\n✅ Weather data retrieved successfully for the city of {city.title()}:\n")
             print(json.dumps(weather_data, indent=4))
+            print(f"\n🕒 Current Local Time in {city.title()}: {local_time.strftime('%Y-%m-%d %H:%M:%S')}\n")
+
         else:
             print("\nFailed to retrieve weather data.")
             print(f"Error: {response.status_code} - {response.text}")
